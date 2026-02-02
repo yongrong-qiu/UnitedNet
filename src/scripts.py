@@ -379,9 +379,18 @@ def run_train(model, dataloader_train, dataloader_val, verbose=False):
         if verbose:
             metrics = run_evaluate(model, dataloader_val)
             print("\n")
-            headers = ["Metrics", "Value"]
-            values = list(metrics.items())
-            print(tabulate(values, headers=headers))
+            # headers = ["Metrics", "Value"]
+            # values = list(metrics.items())
+            # print(tabulate(values, headers=headers))
+            clean_metrics = {}
+            for k, v in metrics.items():
+                if isinstance(v, np.ndarray):
+                    clean_metrics[k] = float(v.mean())
+                else:
+                    clean_metrics[k] = v
+            values = list(clean_metrics.items())
+            print(tabulate(values, headers=["Metrics", "Value"]))
+
 
 
 def run_finetune(model, dataloader_finetune, dataloader_val, verbose=False):
